@@ -23,6 +23,13 @@ namespace PlexShareApp
             clientSessionManager = SessionManagerFactory.GetClientSessionManager();
         }
 
+        bool ValidateUserName(string name)
+        {
+            if(string.IsNullOrEmpty(name))
+                return false;
+            return true;
+        }
+
         /// <summary>
         /// Uses the dashboard's function to assess if the credentials entered is okay
         /// </summary>
@@ -34,21 +41,24 @@ namespace PlexShareApp
         {
             Trace.WriteLine("[UX] Enetering HomeScreen Now");
             bool verified = false;
-            
-            if (ip == "-1")
+            verified = ValidateUserName(name);
+            if(verified == true)
             {
-                Trace.WriteLine("[UX] Instaniating a server");
-                MeetingCredentials meetingCredentials = serverSessionManager.GetPortsAndIPAddress();
-                verified = clientSessionManager.AddClient(meetingCredentials.ipAddress, meetingCredentials.port, name, email, url);
-                ip = meetingCredentials.ipAddress;
-                port = meetingCredentials.port.ToString();
-                isServer = true;
-            }
-            else
-            {
-                Trace.WriteLine("[UX] Instaniating a client");
-                verified = clientSessionManager.AddClient(ip, int.Parse(port), name, email, url);
-                isServer = false;
+                if (ip == "-1")
+                {
+                    Trace.WriteLine("[UX] Instaniating a server");
+                    MeetingCredentials meetingCredentials = serverSessionManager.GetPortsAndIPAddress();
+                    verified = clientSessionManager.AddClient(meetingCredentials.ipAddress, meetingCredentials.port, name, email, url);
+                    ip = meetingCredentials.ipAddress;
+                    port = meetingCredentials.port.ToString();
+                    isServer = true;
+                }
+                else
+                {
+                    Trace.WriteLine("[UX] Instaniating a client");
+                    verified  = clientSessionManager.AddClient(ip, int.Parse(port), name, email, url);
+                    isServer = false;
+                }
             }
 
             List<string> result = new List<string>();
@@ -58,6 +68,11 @@ namespace PlexShareApp
 
             Trace.WriteLine("[UX] The client verification returned : " + verified);
             return result;
+        }
+        public void SetFakes(IUXServerSessionManager mockServerSessionManager, IUXClientSessionManager mockClientSessionManager)
+        {
+            serverSessionManager = mockServerSessionManager;
+            clientSessionManager = mockClientSessionManager;
         }
     }
 }

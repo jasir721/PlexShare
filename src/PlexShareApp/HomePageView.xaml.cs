@@ -10,30 +10,18 @@
  * Description = Interaction Logic for HomePageView.xaml
  * 
  ************************************************************/
-using Client.Models;
-using Dashboard;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.IO.Packaging;
-using System.Linq;
 using System.Net;
-using System.Reflection;
-using System.Text;
+using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Xml.Linq;
 
 
 namespace PlexShareApp
@@ -43,11 +31,11 @@ namespace PlexShareApp
     /// </summary>
     public partial class HomePageView : Window
     {
-        string Name = "";
-        string Email = "";
-        string Url = "";
-        string absolute_path = "";
-        bool homaPageanimation = true;
+        string userName = "";
+        string userEmail = "";
+        string imageUrl = "";
+        string absolutePath = "";
+        bool homePageAnimation = true;
         private bool sessionPageOn;
         private SessionsPage sessionPage;
         /// <summary>
@@ -68,48 +56,55 @@ namespace PlexShareApp
                 this.Time.Text = DateTime.Now.ToString("hh:mm:ss tt");
                 this.Date.Text = DateTime.Now.ToString("d MMMM yyyy, dddd");
             }, this.Dispatcher);
-            Name = name;
-            Email = email;
-            Url = url;
-            this.Name_box.Text = Name;
-            this.Email_textbox.Text = Email;
-            this.Email_textbox.IsEnabled = false;
-            sessionPageOn = false;
-            // It stores the absolute path of the profile image
-            absolute_path = DownloadImage(Url);
-            this.profile_picture.ImageSource = new BitmapImage(new Uri(absolute_path,UriKind.Absolute));
-            this.Show();
-            sessionPage = new SessionsPage(Email);
-            // Function to start the animation
 
-            Task task = new Task(() => HomePage_Animate(this));
+            // Storing it in a global variable
+            userName = name;
+            userEmail = email;
+            imageUrl = url;
+            this.nameBox.Text = userName;
+            this.emailTextBox.Text = userEmail;
+            this.emailTextBox.IsEnabled = false;
+            sessionPageOn = false;
+
+            // It stores the absolute path of the profile image
+            absolutePath = DownloadImage(imageUrl);
+            this.profilePicture.ImageSource = new BitmapImage(new Uri(absolutePath, UriKind.Absolute));
+            this.Show();
+
+            // To initialize the session page
+            sessionPage = new SessionsPage(userEmail);
+
+            // Function to start the animation
+            Task task = new Task(() => HomePageAnimation(this));
             task.Start();
         }
 
-        void HomePage_Animate(HomePageView obj)
+        /// <summary>
+        /// This function will make the animation in the homescreen to run forever until the user clicks the button
+        /// </summary>
+        /// <param name="obj">HomePageView Object</param>
+        void HomePageAnimation(HomePageView obj)
         {
-            int v = 0;
+            int count = 0;
             int direction = 1;
+
             // Making animation run forever
-            while (homaPageanimation)
+            while (homePageAnimation)
             {
-                if (v == 0)
+                if (count == 0)
                 {
                     direction = 1;
                 }
-                else if (v == 100)
+                else if (count == 100)
                 {
                     direction = -1;
                 }
-
-                v += direction;
-                obj.pb1.Dispatcher.Invoke(() => pb1.Value = v, System.Windows.Threading.DispatcherPriority.Background);
-                obj.pb2.Dispatcher.Invoke(() => pb2.Value = v, System.Windows.Threading.DispatcherPriority.Background);
-                obj.pb3.Dispatcher.Invoke(() => pb3.Value = v, System.Windows.Threading.DispatcherPriority.Background);
-                obj.pb4.Dispatcher.Invoke(() => pb4.Value = v, System.Windows.Threading.DispatcherPriority.Background);
-                obj.pb5.Dispatcher.Invoke(() => pb5.Value = v, System.Windows.Threading.DispatcherPriority.Background);
-                //obj.pb6.Dispatcher.Invoke(() => pb6.Value = v, System.Windows.Threading.DispatcherPriority.Background);
-
+                count += direction;
+                obj.pb1.Dispatcher.Invoke(() => pb1.Value = count, System.Windows.Threading.DispatcherPriority.Background);
+                obj.pb2.Dispatcher.Invoke(() => pb2.Value = count, System.Windows.Threading.DispatcherPriority.Background);
+                obj.pb3.Dispatcher.Invoke(() => pb3.Value = count, System.Windows.Threading.DispatcherPriority.Background);
+                obj.pb4.Dispatcher.Invoke(() => pb4.Value = count, System.Windows.Threading.DispatcherPriority.Background);
+                obj.pb5.Dispatcher.Invoke(() => pb5.Value = count, System.Windows.Threading.DispatcherPriority.Background);
                 Thread.Sleep(20);
             }
         }
@@ -119,24 +114,19 @@ namespace PlexShareApp
         /// On clicking new meeting button, creates the homepage view 
         /// and passing name,email and url of the image for Mainscreen
         /// </summary>
-        private void New_Meeting_Button_Click(object sender, RoutedEventArgs e)
+        private void NewMeetingButtonClick(object sender, RoutedEventArgs e)
         {
-            bool invalid = false;
-            if (string.IsNullOrEmpty(this.Name_box.Text)){
-                this.Name_box.Text = "";
-                this.Name_block.Text = "Please Enter Name!!!";
-                invalid = true;
-            }
-            if (invalid)
-            {
-                return;
-            }
             HomePageViewModel viewModel = new();
             this.DataContext = viewModel;
-
-            List<string> verified = viewModel.VerifyCredentials(this.Name_box.Text, "-1", "0", this.Email_textbox.Text, this.Url);
-            homaPageanimation = false;
-            MainScreenView mainScreenView = new MainScreenView(this.Name_box.Text, this.Email_textbox.Text, this.absolute_path, this.Url, verified[1], verified[2], true);
+            List<string> verified = viewModel.VerifyCredentials(this.nameBox.Text, "-1", "0", this.emailTextBox.Text, this.imageUrl);
+            if (verified[2] == "False")
+            {
+                nameBox.Text = "";
+                nameBlock.Text = "Enter Name!!";
+                return;
+            }
+            homePageAnimation = false;
+            MainScreenView mainScreenView = new MainScreenView(this.nameBox.Text, this.emailTextBox.Text, this.absolutePath, this.imageUrl, verified[1], verified[2], true);
             mainScreenView.Show();
             this.Close();
         }
@@ -144,20 +134,20 @@ namespace PlexShareApp
         /// <summary>
         /// Checks if the IP address is valid or not
         /// </summary>
-        /// <param name="IP">IP address in a string format</param>
+        /// <param name="ip">IP address in a string format</param>
         /// <returns>true if valid else false</returns>
-        private bool Validate_IP(string IP)
+        private bool ValidateIP(string ip)
         {
-            if (IP.Length == 0)
+            if (ip.Length == 0)
                 return false;
-            string[] IP_tokens = IP.Split('.');
-            if (IP_tokens.Length != 4)
+            string[] ipTokens = ip.Split('.');
+            if (ipTokens.Length != 4)
                 return false;
-            foreach(string token in IP_tokens)
+            foreach (string token in ipTokens)
             {
-                int token_value = Int32.Parse(token);
+                int tokenValue = Int32.Parse(token);
                 //System.Diagnostics.Debug.WriteLine(token_value.ToString
-                if (token_value < 0 || token_value > 255)
+                if (tokenValue < 0 || tokenValue > 255)
                     return false;
             }
             return true;
@@ -168,27 +158,27 @@ namespace PlexShareApp
         /// and passes the name,email and url of the image, server IP and server PORT
         /// to Mainscreen
         /// </summary>
-        private void Join_Meeting_Button_Click(object sender, RoutedEventArgs e)
+        private void JoinButtonMeetingButton(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine("[UX] Clicked Join Meeting");
             bool invalid = false;
-            if (string.IsNullOrEmpty(this.Name_box.Text))
+            if (string.IsNullOrEmpty(this.nameBox.Text))
             {
-                this.Name_box.Text = "";
-                this.Name_block.Text = "Please Enter Name!!!";
+                this.nameBox.Text = "";
+                this.nameBlock.Text = "Please Enter Name!!!";
                 invalid = true;
             }
-            if (string.IsNullOrEmpty(this.Server_IP.Text) || !Validate_IP(this.Server_IP.Text))
+            if (string.IsNullOrEmpty(this.serverIP.Text) || !ValidateIP(this.serverIP.Text))
             {
-                this.Server_IP.Text = "";
-                this.Server_IP_textblock.Text = "Please Enter Valid Server IP(format)!!!";
+                this.serverIP.Text = "";
+                this.serverIpTextBlock.Text = "Please Enter Valid Server IP(format)!!!";
                 invalid = true;
             }
-            if (string.IsNullOrEmpty(this.Server_PORT.Text))
+            if (string.IsNullOrEmpty(this.serverPort.Text))
             {
-                this.Server_PORT.Text = "";
-                this.Server_PORT_textblock.Text = "Please Enter Server PORT!!!";
-                invalid=true;
+                this.serverPort.Text = "";
+                this.serverPortTextBlock.Text = "Please Enter Server PORT!!!";
+                invalid = true;
             }
             // If invalid , the user has to enter again the IP and PORT
             if (invalid)
@@ -198,17 +188,17 @@ namespace PlexShareApp
             HomePageViewModel viewModel = new();
             this.DataContext = viewModel;
 
-            List<string> verified = viewModel.VerifyCredentials(this.Name_box.Text, this.Server_IP.Text, this.Server_PORT.Text, this.Email_textbox.Text, this.Url);
-            if (verified[0]!="True")
+            List<string> verified = viewModel.VerifyCredentials(this.nameBox.Text, this.serverIP.Text, this.serverPort.Text, this.emailTextBox.Text, this.imageUrl);
+            if (verified[0] != "True")
             {
-                this.Server_IP.Text = "";
-                this.Server_IP_textblock.Text = "Server IP didn't matched!!!";
-                this.Server_PORT.Text = "";
-                this.Server_PORT_textblock.Text = "Server PORT didn't matched!!!";
+                this.serverIP.Text = "";
+                this.serverIpTextBlock.Text = "Server IP didn't matched!!!";
+                this.serverPort.Text = "";
+                this.serverPortTextBlock.Text = "Server PORT didn't matched!!!";
                 return;
             }
-            homaPageanimation = false;
-            MainScreenView mainScreenView = new MainScreenView(this.Name_box.Text, this.Email_textbox.Text, this.absolute_path, this.Url, verified[1], verified[2], false);
+            homePageAnimation = false;
+            MainScreenView mainScreenView = new MainScreenView(this.nameBox.Text, this.emailTextBox.Text, this.absolutePath, this.imageUrl, verified[1], verified[2], false);
             mainScreenView.Show();
             this.Close();
         }
@@ -226,12 +216,12 @@ namespace PlexShareApp
         string DownloadImage(string url)
         {
             string imageName = "";
-            int len_email = Email.Length;
-            for(int i=0;i<len_email;i++)
+            int len_email = userEmail.Length;
+            for (int i = 0; i < len_email; i++)
             {
-                if(Email[i] == '@')
+                if (userEmail[i] == '@')
                     break;
-                imageName+=Email[i];
+                imageName += userEmail[i];
             }
             string dir = "./Resources/";
             dir = Environment.GetEnvironmentVariable("temp", EnvironmentVariableTarget.User);
@@ -244,10 +234,10 @@ namespace PlexShareApp
                 }
                 using (WebClient webClient = new())
                 {
-                    webClient.DownloadFile(Url, absolute_path);
+                    webClient.DownloadFile(imageUrl, absolute_path);
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 absolute_path = "./Resources/AuthScreenImg.jpg";
                 MessageBox.Show(e.Message);

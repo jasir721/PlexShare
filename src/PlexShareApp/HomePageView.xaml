@@ -182,13 +182,13 @@
             </Image>-->
             <Border CornerRadius="100,100,100,100" Grid.Column="2" BorderBrush="White" BorderThickness="8"  Grid.Row="1">
                 <Border.Background>
-                    <ImageBrush x:Name="profile_picture" ImageSource="{Binding ReceivedImage}" Stretch="UniformToFill"/>
+                    <ImageBrush x:Name="profilePicture" ImageSource="{Binding ReceivedImage}" Stretch="UniformToFill"/>
                 </Border.Background>
                 <TextBlock HorizontalAlignment="Left" Height="9" Margin="51,131,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="16"/>
             </Border>
             <!--Name-->
             <Border BorderThickness="1" CornerRadius="16"  Grid.ColumnSpan="4" Grid.Row="3" Margin="80,15,0,15" >
-                <TextBox Name="Name_box" Text="" Style="{StaticResource Round_textbox}">
+                <TextBox Name="nameBox" Text="" Style="{StaticResource Round_textbox}">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="18"></Setter>
@@ -196,7 +196,7 @@
                     </TextBox.Resources>
                 </TextBox>
             </Border>
-            <TextBlock Name="Name_block" Grid.Row="3" Grid.ColumnSpan="4"  IsHitTestVisible="False" Text="Name" Height="40" Margin="80,0,0,0" >
+            <TextBlock Name="nameBlock" Grid.Row="3" Grid.ColumnSpan="4"  IsHitTestVisible="False" Text="Name" Height="40" Margin="80,0,0,0" >
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -208,7 +208,7 @@
                         <Setter Property="Foreground" Value="{DynamicResource Color8Bg}"/>
                         <Setter Property="Padding" Value="15,0,0,0"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=Name_box}" Value="">
+                            <DataTrigger Binding="{Binding Text, ElementName=nameBox}" Value="">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
 
@@ -218,7 +218,7 @@
             </TextBlock>
             <!--Email Address-->
             <Border BorderThickness="1" CornerRadius="16"  Grid.ColumnSpan="4" Grid.Row="4" Margin="80,14,0,15" >
-                <TextBox x:Name="Email_textbox" Text="Email" Style="{StaticResource Round_textbox}">
+                <TextBox x:Name="emailTextBox" Text="Email" Style="{StaticResource Round_textbox}">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="18"></Setter>
@@ -228,7 +228,7 @@
             </Border>
             <!--Server IP-->
             <Border BorderThickness="1" CornerRadius="16"  Grid.ColumnSpan="4" Grid.Row="5" Margin="80,14,0,15" >
-                <TextBox x:Name="Server_IP" Style="{StaticResource Round_textbox}">
+                <TextBox x:Name="serverIP" Style="{StaticResource Round_textbox}">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="18"></Setter>
@@ -237,7 +237,7 @@
                 </TextBox>
             </Border>
 
-            <TextBlock Name="Server_IP_textblock" Grid.Row="5" Grid.ColumnSpan="4"  IsHitTestVisible="False" Text="Server IP" Height="40" Margin="80,0,0,0" >
+            <TextBlock Name="serverIpTextBlock" Grid.Row="5" Grid.ColumnSpan="4"  IsHitTestVisible="False" Text="Server IP" Height="40" Margin="80,0,0,0" >
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -249,7 +249,7 @@
                         <Setter Property="Foreground" Value="{DynamicResource Color8Bg}"/>
                         <Setter Property="Padding" Value="15,0,0,0"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=Server_IP}" Value="">
+                            <DataTrigger Binding="{Binding Text, ElementName=serverIP}" Value="">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
 
@@ -260,7 +260,7 @@
 
             <!--Server Port-->
             <Border BorderThickness="1" CornerRadius="16"  Grid.ColumnSpan="4" Grid.Row="6" Margin="80,14,0,15" >
-                <TextBox Name="Server_PORT" Text="" Style="{StaticResource Round_textbox}">
+                <TextBox Name="serverPort" Text="" Style="{StaticResource Round_textbox}">
                     <TextBox.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="18"></Setter>
@@ -268,7 +268,7 @@
                     </TextBox.Resources>
                 </TextBox>
             </Border>
-            <TextBlock Name="Server_PORT_textblock" Grid.Row="6" Grid.ColumnSpan="4"  IsHitTestVisible="False" Text="Server PORT" Height="40" Margin="80,0,0,0" >
+            <TextBlock Name="serverPortTextBlock" Grid.Row="6" Grid.ColumnSpan="4"  IsHitTestVisible="False" Text="Server PORT" Height="40" Margin="80,0,0,0" >
                 <TextBlock.Style>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Visibility" Value="Collapsed"/>
@@ -280,7 +280,7 @@
                         <Setter Property="Foreground" Value="{DynamicResource Color8Bg}"/>
                         <Setter Property="Padding" Value="15,0,0,0"/>
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Text, ElementName=Server_PORT}" Value="">
+                            <DataTrigger Binding="{Binding Text, ElementName=serverPort}" Value="">
                                 <Setter Property="Visibility" Value="Visible"/>
                             </DataTrigger>
 
@@ -290,7 +290,7 @@
             </TextBlock>
         </Grid>
         <!--Join Button-->
-        <Button Name="Join_Meeting_Button" Click="Join_Meeting_Button_Click" Grid.Row="4"   Grid.Column="3" Background="{DynamicResource Color4Bg}">
+        <Button Name="Join_Meeting_Button" Click="JoinButtonMeetingButton" Grid.Row="4"   Grid.Column="3" Background="{DynamicResource Color4Bg}">
             <Grid Grid.Column="3" HorizontalAlignment="Center" Grid.Row="4">
                 <Image Name="Join_Meeting_image" Source="/Resources/[removal.ai]_tmp-635051040cac5.png" Stretch="Fill" Margin="85,25,65,22" />
             </Grid>
@@ -301,7 +301,7 @@
             </Button.Resources>
         </Button>
         <!--New Meeting-->
-        <Button Name="New_Meeting_Button" Click="New_Meeting_Button_Click"  Grid.Row="4"   Grid.Column="1" Background="{DynamicResource Color4Bg}">
+        <Button Name="New_Meeting_Button" Click="NewMeetingButtonClick"  Grid.Row="4"   Grid.Column="1" Background="{DynamicResource Color4Bg}">
             <Grid Grid.Column="1" HorizontalAlignment="Center" Grid.Row="4">
                 <Image Name="New_Meeting_image" Source="/Resources/[removal.ai]_tmp-6350549d077ef.png" Stretch="Fill" Margin="55,12,55,12"/> 
             </Grid>
@@ -380,6 +380,6 @@
             <ProgressBar x:Name="pb5" Height="1000" Width="15"  Orientation="Vertical" Background="Transparent"   BorderThickness="0" Foreground="{DynamicResource Color6Bg}"></ProgressBar>
         </StackPanel>
         <!--Cloud session page-->
-        <Frame x:Name="SessionPage" NavigationUIVisibility="Hidden" Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="3" Grid.RowSpan="4"/>
+        <Frame x:Name="SessionPage" NavigationUIVisibility="Hidden" Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="3" Grid.RowSpan="4" />
     </Grid>
 </Window>
