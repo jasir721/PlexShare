@@ -31,8 +31,6 @@ namespace PlexShareApp
     /// </summary>
     public partial class HomePageView : Window
     {
-        string userName = "";
-        string userEmail = "";
         string imageUrl = "";
         string absolutePath = "";
         bool homePageAnimation = true;
@@ -58,21 +56,19 @@ namespace PlexShareApp
             }, this.Dispatcher);
 
             // Storing it in a global variable
-            userName = name;
-            userEmail = email;
             imageUrl = url;
-            this.nameBox.Text = userName;
-            this.emailTextBox.Text = userEmail;
+            this.nameBox.Text = name;
+            this.emailTextBox.Text = email;
             this.emailTextBox.IsEnabled = false;
             sessionPageOn = false;
 
             // It stores the absolute path of the profile image
-            absolutePath = DownloadImage(imageUrl);
+            absolutePath = DownloadImage(imageUrl,email);
             this.profilePicture.ImageSource = new BitmapImage(new Uri(absolutePath, UriKind.Absolute));
             this.Show();
 
             // To initialize the session page
-            sessionPage = new SessionsPage(userEmail);
+            sessionPage = new SessionsPage(this.emailTextBox.Text);
 
             // Function to start the animation
             Task task = new Task(() => HomePageAnimation(this));
@@ -119,39 +115,22 @@ namespace PlexShareApp
             HomePageViewModel viewModel = new();
             this.DataContext = viewModel;
             List<string> verified = viewModel.VerifyCredentials(this.nameBox.Text, "-1", "0", this.emailTextBox.Text, this.imageUrl);
-            if (verified[2] == "False")
+            if (verified[6]=="False")
             {
-                nameBox.Text = "";
-                nameBlock.Text = "Enter Name!!";
+                if (verified[2]=="False")
+                {
+                    this.nameBox.Text = "";
+                    this.nameBlock.Text = "Please Enter Name!!!!";
+                }
                 return;
             }
             homePageAnimation = false;
-            MainScreenView mainScreenView = new MainScreenView(this.nameBox.Text, this.emailTextBox.Text, this.absolutePath, this.imageUrl, verified[1], verified[2], true);
+            MainScreenView mainScreenView = new MainScreenView(this.nameBox.Text, this.emailTextBox.Text, this.absolutePath, this.imageUrl, verified[0], verified[1], true);
             mainScreenView.Show();
             this.Close();
         }
 
-        /// <summary>
-        /// Checks if the IP address is valid or not
-        /// </summary>
-        /// <param name="ip">IP address in a string format</param>
-        /// <returns>true if valid else false</returns>
-        private bool ValidateIP(string ip)
-        {
-            if (ip.Length == 0)
-                return false;
-            string[] ipTokens = ip.Split('.');
-            if (ipTokens.Length != 4)
-                return false;
-            foreach (string token in ipTokens)
-            {
-                int tokenValue = Int32.Parse(token);
-                //System.Diagnostics.Debug.WriteLine(token_value.ToString
-                if (tokenValue < 0 || tokenValue > 255)
-                    return false;
-            }
-            return true;
-        }
+
 
         /// <summary>
         /// On clicking join meeting button, creates the homepage view 
@@ -161,59 +140,38 @@ namespace PlexShareApp
         private void JoinButtonMeetingButton(object sender, RoutedEventArgs e)
         {
             Trace.WriteLine("[UX] Clicked Join Meeting");
-            bool invalid = false;
-            if (string.IsNullOrEmpty(this.nameBox.Text))
-            {
-                this.nameBox.Text = "";
-                this.nameBlock.Text = "Please Enter Name!!!";
-                invalid = true;
-            }
-            if (string.IsNullOrEmpty(this.serverIP.Text) || !ValidateIP(this.serverIP.Text))
-            {
-                this.serverIP.Text = "";
-                this.serverIpTextBlock.Text = "Please Enter Valid Server IP(format)!!!";
-                invalid = true;
-            }
-            if (string.IsNullOrEmpty(this.serverPort.Text))
-            {
-                this.serverPort.Text = "";
-                this.serverPortTextBlock.Text = "Please Enter Server PORT!!!";
-                invalid = true;
-            }
-            // If invalid , the user has to enter again the IP and PORT
-            if (invalid)
-            {
-                return;
-            }
             HomePageViewModel viewModel = new();
             this.DataContext = viewModel;
 
             List<string> verified = viewModel.VerifyCredentials(this.nameBox.Text, this.serverIP.Text, this.serverPort.Text, this.emailTextBox.Text, this.imageUrl);
-            if (verified[0] != "True")
+            if (verified[6] == "False")
             {
+                if (verified[2] == "False")
+                {
+                    this.nameBox.Text = "";
+                    this.nameBlock.Text = "Please Enter Name!!!!";
+                }
                 this.serverIP.Text = "";
-                this.serverIpTextBlock.Text = "Server IP didn't matched!!!";
+                this.serverIpTextBlock.Text = "Server IP not Valid !!!";
                 this.serverPort.Text = "";
-                this.serverPortTextBlock.Text = "Server PORT didn't matched!!!";
+                this.serverPortTextBlock.Text = "Server PORT not Valid!!!";
+                if (verified[3]=="False")
+                {
+                    this.serverIpTextBlock.Text = "Server IP didn't matched!!!";
+                }
+                if(verified[4]=="False")
+                {
+                    this.serverPortTextBlock.Text = "Server Port didn't matched!!!";
+                }
                 return;
             }
             homePageAnimation = false;
-            MainScreenView mainScreenView = new MainScreenView(this.nameBox.Text, this.emailTextBox.Text, this.absolutePath, this.imageUrl, verified[1], verified[2], false);
+            MainScreenView mainScreenView = new MainScreenView(this.nameBox.Text, this.emailTextBox.Text, this.absolutePath, this.imageUrl, verified[0], verified[1], false);
             mainScreenView.Show();
             this.Close();
         }
 
-        /// <summary>
-        /// Remove the current object and calls the Authentication view
-        /// </summary>
-        private void Logout_button_Click(object sender, RoutedEventArgs e)
-        {
-            AuthenticationView authenticationView = new AuthenticationView();
-            authenticationView.Show();
-            this.Close();
-        }
-
-        string DownloadImage(string url)
+        string DownloadImage(string url,string userEmail)
         {
             string imageName = "";
             int len_email = userEmail.Length;

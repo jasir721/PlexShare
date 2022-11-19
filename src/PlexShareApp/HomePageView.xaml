@@ -344,15 +344,7 @@
         <!--Join Meeting Textbox-->
         <TextBlock Foreground="{DynamicResource Color5Bg}" Name="Join_Meeting" Grid.Column="3" Grid.Row="5" FontFamily="Cascadia Code SemiBold" TextWrapping="Wrap" Text="Join Meeting" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="28"/>
         <!--Session button-->
-        <Button Grid.Column="6" FontSize="18" Background="{DynamicResource Color1Bg}" Foreground="White" FontWeight="DemiBold" Margin="0,5,0,0" Padding="0,0,0,5" Content="Session"  Click="Button_Click" VerticalAlignment="Top"  Grid.Row="1" Name="Session">
-            <Button.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="16"/>
-                </Style>
-            </Button.Resources>
-        </Button>
-        <!--Logout button-->
-        <Button Name="Logout_button" Click="Logout_button_Click" Grid.Column="6" FontSize="18" Background="{DynamicResource Color1Bg}" Foreground="White" FontWeight="DemiBold" Padding="0,0,0,5" Content="Logout"  VerticalAlignment="Bottom"  Grid.Row="1">
+        <Button Grid.Column="6" FontSize="18" Background="{DynamicResource Color1Bg}" Foreground="White" FontWeight="DemiBold" Margin="0,5,0,0" Padding="0,0,0,5" Content="Session"  Click="Button_Click" VerticalAlignment="Center"  Grid.Row="1" Name="Session">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="16"/>
