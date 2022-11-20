@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Security;
@@ -36,18 +37,17 @@ namespace PlexShareApp
         bool homePageAnimation = true;
         private bool sessionPageOn;
         private SessionsPage sessionPage;
+
         /// <summary>
-        /// Constructor function which takes some arguments from 
-        /// authentication page.
+        /// Intializing HomePageView which takes three arguments passed from the Authentication Page
         /// </summary>
         /// <param name="name">Name of the User</param>
-        /// <param name="email">Email Id of the User</param>
-        /// <param name="url">Image URL from google authentication</param>
-        /// <param name="success">success is true when directly rendered from the authentication
-        /// success is false when IP and PORT is not valid for joining the meeting.</param>
+        /// <param name="email">Email Id of the user</param>
+        /// <param name="url">Public URL of the user</param>
         public HomePageView(string name, string email, string url)
         {
             InitializeComponent();
+
             // Updates the Date and time in each second in the view
             DispatcherTimer timer = new DispatcherTimer(new TimeSpan(0, 0, 1), DispatcherPriority.Normal, delegate
             {
@@ -57,13 +57,17 @@ namespace PlexShareApp
 
             // Storing it in a global variable
             imageUrl = url;
+            // Updating the textbox using the arguments passed
             this.nameBox.Text = name;
             this.emailTextBox.Text = email;
             this.emailTextBox.IsEnabled = false;
             sessionPageOn = false;
 
+            // Using ViewModel for downloading the profile image
+            HomePageViewModel _viewModel = new();
+            this.DataContext = _viewModel;
             // It stores the absolute path of the profile image
-            absolutePath = DownloadImage(imageUrl,email);
+            absolutePath = _viewModel.DownloadImage(imageUrl,email);
             this.profilePicture.ImageSource = new BitmapImage(new Uri(absolutePath, UriKind.Absolute));
             this.Show();
 
@@ -83,7 +87,7 @@ namespace PlexShareApp
         {
             int count = 0;
             int direction = 1;
-
+            Trace.WriteLine("[UX] HomePageAnimation started");
             // Making animation run forever
             while (homePageAnimation)
             {
@@ -103,15 +107,17 @@ namespace PlexShareApp
                 obj.pb5.Dispatcher.Invoke(() => pb5.Value = count, System.Windows.Threading.DispatcherPriority.Background);
                 Thread.Sleep(20);
             }
+            Trace.WriteLine("[UX] HomePageAnimation stopped");
         }
 
 
         /// <summary>
         /// On clicking new meeting button, creates the homepage view 
-        /// and passing name,email and url of the image for Mainscreen
+        /// and passing name,email and url of the image,IP, PORT and server details to the Mainscreen
         /// </summary>
         private void NewMeetingButtonClick(object sender, RoutedEventArgs e)
         {
+            Trace.WriteLine("[UX] Clicked New Meeting button");
             HomePageViewModel viewModel = new();
             this.DataContext = viewModel;
             List<string> verified = viewModel.VerifyCredentials(this.nameBox.Text, "-1", "0", this.emailTextBox.Text, this.imageUrl);
@@ -171,39 +177,6 @@ namespace PlexShareApp
             this.Close();
         }
 
-        string DownloadImage(string url,string userEmail)
-        {
-            string imageName = "";
-            int len_email = userEmail.Length;
-            for (int i = 0; i < len_email; i++)
-            {
-                if (userEmail[i] == '@')
-                    break;
-                imageName += userEmail[i];
-            }
-            string dir = "./Resources/";
-            dir = Environment.GetEnvironmentVariable("temp", EnvironmentVariableTarget.User);
-            string absolute_path = System.IO.Path.Combine(dir, imageName);
-            try
-            {
-                if (File.Exists(absolute_path))
-                {
-                    return absolute_path;
-                }
-                using (WebClient webClient = new())
-                {
-                    webClient.DownloadFile(imageUrl, absolute_path);
-                }
-            }
-            catch (Exception e)
-            {
-                absolute_path = "./Resources/AuthScreenImg.jpg";
-                MessageBox.Show(e.Message);
-            }
-
-            return absolute_path;
-        }
-
 
         /// <summary>
         /// Changes the theme using the toggle button. It changes the resource file 
@@ -212,10 +185,11 @@ namespace PlexShareApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Theme_toggle_button_Click(object sender, RoutedEventArgs e)
+        private void ThemeToggleButtonClick(object sender, RoutedEventArgs e)
         {
+            Trace.WriteLine("[UX] Toggle Theme Button Clicked");
             var dict = new ResourceDictionary();
-            if (Theme_toggle_button.IsChecked != true)
+            if (themeToggleButton.IsChecked != true)
             {
                 dict.Source = new Uri("Theme1.xaml", UriKind.Relative);
                 Application.Current.Resources.MergedDictionaries.Clear();
@@ -226,6 +200,27 @@ namespace PlexShareApp
                 dict.Source = new Uri("Theme2.xaml", UriKind.Relative);
                 Application.Current.Resources.MergedDictionaries.Clear();
                 Application.Current.Resources.MergedDictionaries.Add(dict);
+            }
+        }
+
+        /// <summary>
+        /// SessionButtonClick to open the Cloud session frame
+        /// </summary>
+        /// <param name="sender">Session button</param>
+        /// <param name="e">Onclick</param>
+        private void SessionButtonClick(object sender, RoutedEventArgs e)
+        {
+            Trace.WriteLine("[UX] Session Button Clicked");
+            if (sessionPageOn)
+            { 
+                sessionPageOn = false;
+                SessionPage.Content = null;
+            }
+            else
+            {
+                //Session.Background = Brushes.DarkCyan;
+                sessionPageOn = true;
+                SessionPage.Content = sessionPage;
             }
         }
 
@@ -288,22 +283,6 @@ namespace PlexShareApp
             else
             {
                 this.BorderThickness = new System.Windows.Thickness(0);
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            if (sessionPageOn)
-            {
-                //Session.Background = Brushes.Transparent;
-                sessionPageOn = false;
-                SessionPage.Content = null;
-            }
-            else
-            {
-                //Session.Background = Brushes.DarkCyan;
-                sessionPageOn = true;
-                SessionPage.Content = sessionPage;
             }
         }
     }

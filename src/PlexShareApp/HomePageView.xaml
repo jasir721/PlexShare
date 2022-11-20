@@ -174,12 +174,6 @@
             <!--Profile Details-->
             <Rectangle Fill="{DynamicResource Color1Bg}" RadiusX="16" RadiusY="16" Grid.ColumnSpan="5" Grid.RowSpan="8"/>
             <!--Profile Image-->
-
-            <!--<Image Name="pro_pic" Source="C:\Users\LENOVO\source\repos\Homescreen_wpf\Homescreen_wpf\Image1.png" Grid.Column="2" Grid.Row="1" Stretch="Uniform">
-                <Image.Clip>
-                    <EllipseGeometry Center="80,80" RadiusX="70" RadiusY="70"/>
-                </Image.Clip>
-            </Image>-->
             <Border CornerRadius="100,100,100,100" Grid.Column="2" BorderBrush="White" BorderThickness="8"  Grid.Row="1">
                 <Border.Background>
                     <ImageBrush x:Name="profilePicture" ImageSource="{Binding ReceivedImage}" Stretch="UniformToFill"/>
@@ -344,7 +338,7 @@
         <!--Join Meeting Textbox-->
         <TextBlock Foreground="{DynamicResource Color5Bg}" Name="Join_Meeting" Grid.Column="3" Grid.Row="5" FontFamily="Cascadia Code SemiBold" TextWrapping="Wrap" Text="Join Meeting" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="28"/>
         <!--Session button-->
-        <Button Grid.Column="6" FontSize="18" Background="{DynamicResource Color1Bg}" Foreground="White" FontWeight="DemiBold" Margin="0,5,0,0" Padding="0,0,0,5" Content="Session"  Click="Button_Click" VerticalAlignment="Center"  Grid.Row="1" Name="Session">
+        <Button Grid.Column="6" FontSize="18" Background="{DynamicResource Color1Bg}" Foreground="White" FontWeight="DemiBold" Margin="0,5,0,0" Padding="0,0,0,5" Content="Session"  Click="SessionButtonClick" VerticalAlignment="Center"  Grid.Row="1" Name="session">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="16"/>
@@ -353,9 +347,10 @@
         </Button>
         <!--Theme Toggle Button-->
         <DockPanel Grid.Column="6" Grid.Row="7" Grid.ColumnSpan="2">
-            <ToggleButton Name="Theme_toggle_button" Click="Theme_toggle_button_Click"  HorizontalAlignment="Left" Height="26" VerticalAlignment="Center" Width="44"  Cursor="Hand" />
+            <ToggleButton Name="themeToggleButton" Click="ThemeToggleButtonClick"  HorizontalAlignment="Left" Height="26" VerticalAlignment="Center" Width="44"  Cursor="Hand" />
             <TextBlock Foreground="{DynamicResource Color5Bg}" Text="Theme" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="24" FontFamily="Cascadia Code SemiBold"/>
         </DockPanel>
+        <!--Animation Progress bars-->
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Bottom">
             <ProgressBar x:Name="pb1" Height="10" Width="1000"  Orientation="Horizontal" Background="Transparent"  BorderThickness="0" Foreground="{DynamicResource Color1Bg}"></ProgressBar>
         </StackPanel>
@@ -372,6 +367,6 @@
             <ProgressBar x:Name="pb5" Height="1000" Width="15"  Orientation="Vertical" Background="Transparent"   BorderThickness="0" Foreground="{DynamicResource Color6Bg}"></ProgressBar>
         </StackPanel>
         <!--Cloud session page-->
-        <Frame x:Name="SessionPage" NavigationUIVisibility="Hidden" Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="3" Grid.RowSpan="4" />
+        <Frame x:Name="SessionPage" NavigationUIVisibility="Hidden" Grid.Column="1" Grid.ColumnSpan="5" Grid.Row="3" Grid.RowSpan="4"/>
     </Grid>
 </Window>

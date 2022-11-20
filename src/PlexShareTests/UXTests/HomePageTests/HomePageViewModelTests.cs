@@ -1,4 +1,15 @@
-﻿//using static PlexShareTests.UX.HomePageTests.HomePageUtils;
+﻿/************************************************************
+ * Filename    =HomePAgeViewModelTests.cs
+ *
+ * Author      = Jasir
+ *
+ * Product     = PlexShare
+ * 
+ * Project     = UX Team
+ *
+ * Description = Testing the viewmodel for different buttons and dowload image option
+ * 
+ ************************************************************/
 using Xunit;
 using PlexShareApp;
 using PlexShareDashboard.Dashboard.Client.SessionManagement;
@@ -74,6 +85,22 @@ namespace PlexShareTests.UXTests.HomePageTests
             Assert.Equal("True", result[4]);
             Assert.Equal("False", result[5]);
             Assert.Equal("True", result[6]);           // Verified
+        }
+
+        [Fact]
+        public void OnDownloadImage()
+        {
+            // When Image URL is null
+            var path = _viewModel.DownloadImage("", "111901025@smail.iitpkd.ac.in");
+            Assert.Equal("./Resources/AuthScreenImg.jpg", path);
+
+            // When Image URL is valid
+            //path =_viewModel.DownloadImage("")
+            path = _viewModel.DownloadImage("https://lh3.googleusercontent.com/a/ALm5wu0nw9fFKOPz2IhEMI4cY5HLgNMPnEr2LUHUu8E6wg=s96-c", "111901025@smail.iitpkd.ac.in");
+            string dir = Environment.GetEnvironmentVariable("temp", EnvironmentVariableTarget.User);
+            string absolute_path = System.IO.Path.Combine(dir, "111901025");
+            Assert.Equal(absolute_path,path);
+            Assert.True(File.Exists(path));
         }
     }
 }

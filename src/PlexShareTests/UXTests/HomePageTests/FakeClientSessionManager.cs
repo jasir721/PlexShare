@@ -1,4 +1,16 @@
-﻿using Dashboard;
+﻿/************************************************************
+ * Filename    = FakeClientSessionMAnager.cs
+ *
+ * Author      = Jasir
+ *
+ * Product     = PlexShare
+ * 
+ * Project     = UX Team
+ *
+ * Description = Fake Client session manager for testing the HomePageViewModel
+ * 
+ ************************************************************/
+using Dashboard;
 using PlexShare.Dashboard.Client.SessionManagement;
 using PlexShareDashboard.Dashboard.Client.SessionManagement;
 
