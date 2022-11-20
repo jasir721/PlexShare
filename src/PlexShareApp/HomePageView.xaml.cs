@@ -67,7 +67,7 @@ namespace PlexShareApp
             HomePageViewModel _viewModel = new();
             this.DataContext = _viewModel;
             // It stores the absolute path of the profile image
-            absolutePath = _viewModel.DownloadImage(imageUrl,email);
+            absolutePath = _viewModel.DownloadImage(imageUrl, email);
             this.profilePicture.ImageSource = new BitmapImage(new Uri(absolutePath, UriKind.Absolute));
             this.Show();
 
@@ -121,9 +121,9 @@ namespace PlexShareApp
             HomePageViewModel viewModel = new();
             this.DataContext = viewModel;
             List<string> verified = viewModel.VerifyCredentials(this.nameBox.Text, "-1", "0", this.emailTextBox.Text, this.imageUrl);
-            if (verified[6]=="False")
+            if (verified[6] == "False")
             {
-                if (verified[2]=="False")
+                if (verified[2] == "False")
                 {
                     this.nameBox.Text = "";
                     this.nameBlock.Text = "Please Enter Name!!!!";
@@ -161,11 +161,11 @@ namespace PlexShareApp
                 this.serverIpTextBlock.Text = "Server IP not Valid !!!";
                 this.serverPort.Text = "";
                 this.serverPortTextBlock.Text = "Server PORT not Valid!!!";
-                if (verified[3]=="False")
+                if (verified[3] == "False")
                 {
                     this.serverIpTextBlock.Text = "Server IP didn't matched!!!";
                 }
-                if(verified[4]=="False")
+                if (verified[4] == "False")
                 {
                     this.serverPortTextBlock.Text = "Server Port didn't matched!!!";
                 }
@@ -212,7 +212,7 @@ namespace PlexShareApp
         {
             Trace.WriteLine("[UX] Session Button Clicked");
             if (sessionPageOn)
-            { 
+            {
                 sessionPageOn = false;
                 SessionPage.Content = null;
             }

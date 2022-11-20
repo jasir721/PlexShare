@@ -37,7 +37,7 @@ namespace PlexShareApp
             clientSessionManager = SessionManagerFactory.GetClientSessionManager();
         }
 
-        public HomePageViewModel(IUXClientSessionManager clientSessionManager,IUXServerSessionManager serverSessionManager)
+        public HomePageViewModel(IUXClientSessionManager clientSessionManager, IUXServerSessionManager serverSessionManager)
         {
             this.serverSessionManager = serverSessionManager;
             this.clientSessionManager = clientSessionManager;
@@ -78,14 +78,14 @@ namespace PlexShareApp
                 {
                     webClient.DownloadFile(url, absolute_path);
                 }
-                if (File.Exists(absolute_path)==false)
+                if (File.Exists(absolute_path) == false)
                     throw new Exception("File Not found");
             }
             catch (Exception e)
             {
                 // If URL is not found
                 absolute_path = "./Resources/AuthScreenImg.jpg";
-                Trace.WriteLine("[UX] Download Image Exception : ",e.Message);
+                Trace.WriteLine("[UX] Download Image Exception : ", e.Message);
             }
 
             return absolute_path;
@@ -98,7 +98,7 @@ namespace PlexShareApp
         /// <returns>Boolean</returns>
         bool ValidateUserName(string name)
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 return false;
             return true;
         }
@@ -158,7 +158,7 @@ namespace PlexShareApp
         /// <returns></returns>
         bool ValidatePort(string port)
         {
-            if (string.IsNullOrEmpty(port) || port.Length>18  || Int64.Parse(port)<=1024 || Int64.Parse(port)> 65535)
+            if (string.IsNullOrEmpty(port) || port.Length > 18 || Int64.Parse(port) <= 1024 || Int64.Parse(port) > 65535)
             {
                 return false;
             }
@@ -176,15 +176,15 @@ namespace PlexShareApp
         {
             Trace.WriteLine("[UX] Enetering HomeScreen Now");
             // Validating the arguments passed
-            bool isValidUserName = ValidateUserName(name), isServer = ip=="-1"?true:false;
+            bool isValidUserName = ValidateUserName(name), isServer = ip == "-1" ? true : false;
             bool isValidIpAddress = true, isValidPort = true;
-            if (isServer==false)
+            if (isServer == false)
             {
                 isValidIpAddress = ValidateIpAddress(ip);
                 isValidPort = ValidatePort(port);
             }
             bool isVerified = false;
-            if(isValidUserName && isValidIpAddress && isValidPort)
+            if (isValidUserName && isValidIpAddress && isValidPort)
             {
                 if (isServer)
                 {
@@ -198,7 +198,7 @@ namespace PlexShareApp
                 else
                 {
                     Trace.WriteLine("[UX] Instaniating a client");
-                    isVerified  = clientSessionManager.AddClient(ip, int.Parse(port), name, email, url);
+                    isVerified = clientSessionManager.AddClient(ip, int.Parse(port), name, email, url);
                 }
             }
             // Return as List of strings
@@ -206,7 +206,7 @@ namespace PlexShareApp
             result.Add(ip);
             result.Add(port);
             result.Add(isValidUserName.ToString());
-            result.Add(isValidIpAddress.ToString());  
+            result.Add(isValidIpAddress.ToString());
             result.Add(isValidPort.ToString());
             result.Add(isServer.ToString());
             result.Add(isVerified.ToString());

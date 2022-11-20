@@ -27,7 +27,7 @@ namespace PlexShareTests.UXTests.HomePageTests
         private MeetingCredentials? _meetingCredentials;
         public MeetingCredentials GetPortsAndIPAddress()
         {
-            _meetingCredentials =  new MeetingCredentials("192.168.10.11", 12330);
+            _meetingCredentials = new MeetingCredentials("192.168.10.11", 12330);
             return _meetingCredentials;
         }
 
