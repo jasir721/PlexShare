@@ -308,21 +308,21 @@ namespace PlexShareApp
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ThemeToggleButtonClick(object sender, RoutedEventArgs e)
-        {
-            var dict = new ResourceDictionary();
-            if (themeButtonToggle.IsChecked != true)
-            {
-                dict.Source = new Uri("Theme1.xaml", UriKind.Relative);
-                Application.Current.Resources.MergedDictionaries.Clear();
-                Application.Current.Resources.MergedDictionaries.Add(dict);
-            }
-            else
-            {
-                dict.Source = new Uri("Theme2.xaml", UriKind.Relative);
-                Application.Current.Resources.MergedDictionaries.Clear();
-                Application.Current.Resources.MergedDictionaries.Add(dict);
-            }
-        }
+        //private void ThemeToggleButtonClick(object sender, RoutedEventArgs e)
+        //{
+        //    var dict = new ResourceDictionary();
+        //    if (themeButtonToggle.IsChecked != true)
+        //    {
+        //        dict.Source = new Uri("Theme1.xaml", UriKind.Relative);
+        //        Application.Current.Resources.MergedDictionaries.Clear();
+        //        Application.Current.Resources.MergedDictionaries.Add(dict);
+        //    }
+        //    else
+        //    {
+        //        dict.Source = new Uri("Theme2.xaml", UriKind.Relative);
+        //        Application.Current.Resources.MergedDictionaries.Clear();
+        //        Application.Current.Resources.MergedDictionaries.Add(dict);
+        //    }
+        //}
     }
 }
